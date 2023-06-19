@@ -16,6 +16,12 @@ function setupAndConnectSignalR() {
         li.textContent = user+ " wrote: "+message;
         msgList.appendChild(li);
     });
+
+    _connection.on("OnNewUserRegistered", function (user) {
+        var li = document.createElement("li");
+        li.textContent = user+ " joined the chat";
+        msgList.appendChild(li);
+    });
     
     _connection.onreconnecting(function (error) {
         if (error)
@@ -34,6 +40,9 @@ function setupAndConnectSignalR() {
     _connection.start().then(function () { 
         button.disabled = false;
         console.log("connected");
+        _connection.invoke("RegisterUser", user).catch(function (err) {
+            console.error(err.toString());
+        })
     });
 
     return _connection;
@@ -54,7 +63,6 @@ function registerUserIfNeeded() {
 
 function registerUiEventHandlers() {
     button.addEventListener("click", function(event) {
-        //var user = document.getElementById("userInput").value;
         var msg = document.getElementById("messageInput").value;
     
         connection.invoke("Broadcast", user, msg).catch(function (err) {

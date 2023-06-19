@@ -7,3 +7,6 @@
 7. dotnet new webapp
 9. dotnet restore
 10. dotnet build
+11. npm install @microsoft/signalr
+12. mkdir .\wwwroot\lib\signalr
+13. cp .\node_modules\@microsoft\signalr\dist\browser\signalr.js .\wwwroot\lib\signalr\

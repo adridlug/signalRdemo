@@ -1,12 +1,29 @@
 
-var button = document.getElementById("sendButton");
-var msgList = document.getElementById("messagesList");
+
+var userInput = document.getElementById("userInput");
+var msgPage = document.getElementById("msgPage"); 
 
 console.log("registering user...")
 var user = registerUserIfNeeded();
 var connection = setupAndConnectSignalR();
 registerUiEventHandlers();
 
+
+function appendSendMessage(msg) {
+    var divOutChats = document.createElement('div');
+    divOutChats.className = "outgoingchats";
+    var divOutMsgs = document.createElement('div');
+    divOutMsgs.className = "outgoing-msg";
+    var divOutChatsMsg = document.createElement('div');
+    divOutChatsMsg.className = "outgoing-chats-msg"
+    var p = document.createElement("p");
+    p.textContent = msg;
+
+    divOutChatsMsg.appendChild(p);
+    divOutMsgs.appendChild(divOutChatsMsg)
+    divOutChats.appendChild(divOutMsgs);
+    msgPage.appendChild(divOutChats);
+}
 
 function setupAndConnectSignalR() {
     var _connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
@@ -38,7 +55,6 @@ function setupAndConnectSignalR() {
     });
     
     _connection.start().then(function () { 
-        button.disabled = false;
         console.log("connected");
         _connection.invoke("RegisterUser", user).catch(function (err) {
             console.error(err.toString());
@@ -57,16 +73,20 @@ function registerUserIfNeeded() {
         usr = prompt("Who are you?");
         sessionStorage.setItem("user", usr);
     } 
-    document.getElementById("labelUser").textContent = "Hi "+ usr
+    document.getElementById("pUser").textContent = "User name: "+ usr
     return usr;
 }
 
 function registerUiEventHandlers() {
-    button.addEventListener("click", function(event) {
-        var msg = document.getElementById("messageInput").value;
-    
-        connection.invoke("Broadcast", user, msg).catch(function (err) {
-            console.error(err.toString());
-        });
-    });
+    userInput.addEventListener("keyup", (event) => {
+        if (event.key === "Enter") {
+            var msg = userInput.value;
+
+            appendSendMessage(msg);
+
+            connection.invoke("Broadcast", user, msg).catch(function (err) {
+                console.error(err.toString());
+            });
+        }
+      });
 }

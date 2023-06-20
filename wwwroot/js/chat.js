@@ -1,23 +1,19 @@
-
-
-var userInput = document.getElementById("userInput");
-var msgPage = document.getElementById("msgPage"); 
+var msgInbox = document.getElementById("msgInbox");
 
 console.log("registering user...")
-var user = registerUserIfNeeded();
+var senderUser = registerUserIfNeeded();
 var connection = setupAndConnectSignalR();
-registerUiEventHandlers();
 
-
-function appendSentMessage(msg) {
+function appendSentMessage(receiverUser, msg) {
+    var msgPage = document.getElementById(receiverUser+"_msgPage");
     var p = document.createElement("p");
     p.className = "single-msg"
     p.textContent = msg;
 
-    if (msgPage.lastChild.className === "outgoing-chats")
+    if (msgPage.lastChild && msgPage.lastChild.className === "outgoing-chats")
     {
         msgPage.lastChild.lastChild.lastChild.appendChild(p);
-        scroll();
+        scroll(msgPage);
         return;
     }
 
@@ -34,19 +30,20 @@ function appendSentMessage(msg) {
     divOutMsgs.appendChild(divOutChatsMsg)
     divOutChats.appendChild(divOutMsgs);
     msgPage.appendChild(divOutChats);
-    scroll();
+    scroll(msgPage);
 }
 
-function appendReceivedMessage(msg)
+function appendReceivedMessage(senderUser, msg)
 {
+    var msgPage = document.getElementById(senderUser+"_msgPage");
     var p = document.createElement("p");
     p.className = "single-msg"
     p.textContent = msg;
 
-    if (msgPage.lastChild.className === "received-chats")
+    if (msgPage.lastChild && msgPage.lastChild.className === "received-chats")
     {
         msgPage.lastChild.lastChild.lastChild.appendChild(p);
-        scroll();
+        scroll(msgPage);
         return;
     }
 
@@ -63,7 +60,7 @@ function appendReceivedMessage(msg)
     divReceivedMsgs.appendChild(divReceivedMsgInbox);
     divReceivedChats.appendChild(divReceivedMsgs);
     msgPage.appendChild(divReceivedChats);
-    scroll();
+    scroll(msgPage);
 }
 
 function setupAndConnectSignalR() {
@@ -71,14 +68,17 @@ function setupAndConnectSignalR() {
     .withUrl("/chatHub")
     .build();
 
-    _connection.on("OnMessageReceived", function (user, message) {
-        appendReceivedMessage(message);
+    _connection.on("OnMessageReceived", function (senderUser, message) {
+        appendReceivedMessage(senderUser, message);
     });
 
     _connection.on("OnNewUserRegistered", function (user) {
-        var li = document.createElement("li");
-        li.textContent = user+ " joined the chat";
-        msgList.appendChild(li);
+       appendChatBox(user);
+       ping(user);
+    });
+
+    _connection.on("OnPingReceived", function(user) {
+        appendChatBox(user);
     });
     
     _connection.onreconnecting(function (error) {
@@ -97,7 +97,7 @@ function setupAndConnectSignalR() {
     
     _connection.start().then(function () { 
         console.log("connected");
-        _connection.invoke("RegisterUser", user).catch(function (err) {
+        _connection.invoke("RegisterUser", senderUser).catch(function (err) {
             console.error(err.toString());
         })
     });
@@ -118,25 +118,62 @@ function registerUserIfNeeded() {
     return usr;
 }
 
-function sendMessage()
+function sendMessage(receiverUser)
 {
-    var msg = userInput.value;
+    var input = document.getElementById(receiverUser+"_input")
+    var msg = input.value;
 
-    appendSentMessage(msg);
+    appendSentMessage(receiverUser, msg);
 
-    connection.invoke("SendMessage", user, "Nico", msg).catch(function (err) {
+    connection.invoke("SendMessage", senderUser, receiverUser, msg).catch(function (err) {
         console.error(err.toString());
     });
 }
 
-function registerUiEventHandlers() {
-    userInput.addEventListener("keyup", (event) => {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
+function ping(receiverUser)
+{
+    connection.invoke("Ping", senderUser, receiverUser).catch(function (err) {
+        console.error(err.toString());
     });
 }
 
-function scroll() {
+
+function scroll(msgPage) {
     msgPage.scrollTop = msgPage.scrollHeight;
+}
+
+function appendChatBox(user)
+{
+    var chat = document.createElement("div");
+    chatclassName = "chats";
+
+    msgInbox.appendChild(chat);
+
+    var msgPage = document.createElement("div");
+    msgPage.setAttribute("id", user+"_msgPage");
+    msgPage.className = "msg-page";
+
+    chat.appendChild(msgPage);
+
+    var msgBottom = document.createElement("div");
+    msgBottom.className = "msg-bottom";
+
+    chat.appendChild(msgBottom)
+
+    var inputGroup = document.createElement("div");
+    inputGroup.className = "input-group";
+
+    msgBottom.appendChild(inputGroup);
+
+    var input = document.createElement("input");
+    input.className = "form-control";
+    input.setAttribute("id", user+"_input");
+    input.setAttribute("placeholder", "write message...");
+    
+    input.addEventListener("keyup", (event) => {
+        if (event.key === "Enter") {
+            sendMessage(user);
+        }});
+
+    inputGroup.appendChild(input);
 }

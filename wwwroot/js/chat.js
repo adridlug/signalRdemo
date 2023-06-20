@@ -17,6 +17,7 @@ function appendSentMessage(msg) {
     if (msgPage.lastChild.className === "outgoing-chats")
     {
         msgPage.lastChild.lastChild.lastChild.appendChild(p);
+        scroll();
         return;
     }
 
@@ -33,6 +34,7 @@ function appendSentMessage(msg) {
     divOutMsgs.appendChild(divOutChatsMsg)
     divOutChats.appendChild(divOutMsgs);
     msgPage.appendChild(divOutChats);
+    scroll();
 }
 
 function appendReceivedMessage(msg)
@@ -44,6 +46,7 @@ function appendReceivedMessage(msg)
     if (msgPage.lastChild.className === "received-chats")
     {
         msgPage.lastChild.lastChild.lastChild.appendChild(p);
+        scroll();
         return;
     }
 
@@ -60,6 +63,7 @@ function appendReceivedMessage(msg)
     divReceivedMsgs.appendChild(divReceivedMsgInbox);
     divReceivedChats.appendChild(divReceivedMsgs);
     msgPage.appendChild(divReceivedChats);
+    scroll();
 }
 
 function setupAndConnectSignalR() {
@@ -128,7 +132,11 @@ function sendMessage()
 function registerUiEventHandlers() {
     userInput.addEventListener("keyup", (event) => {
         if (event.key === "Enter") {
-            sendMessage()
+            sendMessage();
         }
     });
+}
+
+function scroll() {
+    msgPage.scrollTop = msgPage.scrollHeight;
 }

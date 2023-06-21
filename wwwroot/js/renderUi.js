@@ -1,5 +1,36 @@
-function scroll(msgPage) {
-    msgPage.scrollTop = msgPage.scrollHeight;
+function appendUser(user)
+{
+    appendNavItem(user);
+    appendChatBox(user)
+}
+
+function appendNavItem(user)
+{
+    if (document.getElementById(user+"_li"))
+    {
+        return;
+    }
+    
+    var navItem = document.createElement("li");
+    navItem.setAttribute("id", user+"_li");
+    navItem.addEventListener("click", (event) => {
+        showUserChatBox(user);
+        });
+
+    navItem.appendChild(document.createTextNode(user));
+    nav.appendChild(navItem);
+}
+
+function showUserChatBox(user)
+{
+    var userMsgPage = document.getElementById(user+"_msgPage");
+    
+    if (!userMsgPage)
+    {
+        return;
+    }
+
+    userMsgPage.style.visibility = "visible";
 }
 
 function appendChatBox(user)
@@ -17,6 +48,7 @@ function appendChatBox(user)
     var msgPage = document.createElement("div");
     msgPage.setAttribute("id", user+"_msgPage");
     msgPage.className = "msg-page";
+    msgPage.style.visibility = "hidden";
 
     chat.appendChild(msgPage);
 
@@ -102,4 +134,15 @@ function appendReceivedMessage(senderUser, msg)
     divReceivedChats.appendChild(divReceivedMsgs);
     msgPage.appendChild(divReceivedChats);
     scroll(msgPage);
+}
+
+function createElement(element, className)
+{
+    var el = document.createElement(element);
+    el.className = className;
+    return el;
+}
+
+function scroll(msgPage) {
+    msgPage.scrollTop = msgPage.scrollHeight;
 }

@@ -8,12 +8,12 @@ function setupAndConnectSignalR() {
     });
 
     _connection.on("OnNewUserRegistered", function (user) {
-       appendChatBox(user);
+       appendUser(user);
        ping(user);
     });
 
     _connection.on("OnPingReceived", function(user) {
-        appendChatBox(user);
+        appendUser(user);
     });
     
     _connection.onreconnecting(function (error) {

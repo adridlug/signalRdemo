@@ -1,4 +1,5 @@
 var msgInbox = document.getElementById("msgInbox");
+var nav = document.getElementById("nav");
 
 console.log("registering user...")
 var senderUser = registerUserIfNeeded();

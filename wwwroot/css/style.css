@@ -56,7 +56,8 @@ img {
 }
 /* Styling the inbox */
 .chat-page {
-    padding: 0 0 50px 0;
+    padding: 0 0 100px 0;
+    
 }
 
 .msg-inbox {
@@ -64,6 +65,8 @@ img {
     overflow: hidden;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+    float: left;
+    width: 70%;
 }
 
 
@@ -259,3 +262,29 @@ received-chats-img {
         font-size: 28px;
     }
 }
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+    float: left;
+    width: 30%;
+  }
+  
+  .topnav li {
+    color: #f2f2f2;
+    text-align: left;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+  }
+  
+  .topnav li:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  .topnav li.active {
+    background-color: #04AA6D;
+    color: white;
+  }

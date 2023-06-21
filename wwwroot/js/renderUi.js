@@ -4,6 +4,11 @@ function scroll(msgPage) {
 
 function appendChatBox(user)
 {
+    if (document.getElementById(user+"_input"))
+    {
+        return;
+    }
+    
     var chat = document.createElement("div");
     chatclassName = "chats";
 

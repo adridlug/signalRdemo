@@ -39,6 +39,8 @@ function appendChatBox(user)
 }
 
 function appendSentMessage(receiverUser, msg) {
+    document.getElementById(receiverUser+"_input").value = null;
+    
     var msgPage = document.getElementById(receiverUser+"_msgPage");
     var p = document.createElement("p");
     p.className = "single-msg"

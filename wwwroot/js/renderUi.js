@@ -28,7 +28,7 @@ function createElement(element, className)
     return el;
 }
 
-function createElement(element, classname, id)
+function createElement(element, className, id)
 {
     var el = document.createElement(element);
     el.className = className;

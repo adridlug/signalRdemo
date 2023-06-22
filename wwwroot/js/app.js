@@ -1,5 +1,6 @@
 var msgInbox = document.getElementById("msgInbox");
 var nav = document.getElementById("nav");
+var currentVisibleChat = null;
 
 console.log("registering user...")
 var senderUser = registerUserIfNeeded();

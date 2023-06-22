@@ -23,32 +23,42 @@ function appendNavItem(user)
 
 function showUserChatBox(user)
 {
-    var userMsgPage = document.getElementById(user+"_msgPage");
+    var userChat = document.getElementById(user+"_chat");
     
-    if (!userMsgPage)
+    if (!userChat)
     {
         return;
     }
-
-    userMsgPage.style.visibility = "visible";
+    currentVisibleChat.style.display = "none";
+    userChat.style.display = "block";
+    currentVisibleChat = userChat;
 }
 
 function appendChatBox(user)
 {
-    if (document.getElementById(user+"_input"))
+    if (document.getElementById(user+"_input")) //if user chat box already exists
     {
         return;
     }
     
     var chat = document.createElement("div");
-    chatclassName = "chats";
-
+    chat.className = "chats";
+    chat.setAttribute("id", user+"_chat")
+    
+    if (currentVisibleChat === null) //if it is the first chat which is appended
+    {
+        currentVisibleChat = chat;   
+    }
+    else
+    {
+        chat.style.display = "None";
+    }
+    
     msgInbox.appendChild(chat);
 
     var msgPage = document.createElement("div");
     msgPage.setAttribute("id", user+"_msgPage");
     msgPage.className = "msg-page";
-    msgPage.style.visibility = "hidden";
 
     chat.appendChild(msgPage);
 

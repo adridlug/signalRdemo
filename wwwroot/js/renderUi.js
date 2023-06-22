@@ -84,7 +84,7 @@ function appendChatBox(user)
     
     input.addEventListener("keyup", (event) => {
         if (event.key === "Enter") {
-            //TODO: send messae to user
+            appendSentMessage
         }});
 
     inputGroup.appendChild(input);

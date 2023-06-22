@@ -6,6 +6,7 @@ console.log("registering user...")
 var senderUser = registerUserIfNeeded();
 //TODO: register chat user to server
 
+setupAndConnectSignalR();
 
 function registerUserIfNeeded() {
     var usr = sessionStorage.getItem("user");

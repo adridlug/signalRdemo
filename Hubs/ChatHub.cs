@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace signalRdemo.Hubs
 {
-    public class ChatHub : Hub
+    public class Ch_atHub : Hub
     {
         public async Task Broadcast(string senderUser, string message)
         {
@@ -24,5 +24,10 @@ namespace signalRdemo.Hubs
         {
             await Clients.Group(receiverUser).SendAsync("OnPingReceived", senderUser);
         }
+    }
+
+    public class ChatHub : Hub
+    {
+
     }
 }

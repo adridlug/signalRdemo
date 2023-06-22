@@ -1,10 +1,23 @@
 ﻿@page
-@model IndexModel
-@{
-    ViewData["Title"] = "Home page";
-}
+    <div class="container">
+      <!-- msg-header section starts -->
+      <div class="msg-header">
+        <div class="container1">
+          <div class="active">
+            <p id="pUser">User name</p>
+          </div>
+        </div>
+      </div>
+      <!-- msg-header section ends -->
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+      <!-- Chat inbox  -->
+      <div class="chat-page">
+        <ul id="nav" class = "topnav">
+        </ul>
+        <div id ="msgInbox" class="msg-inbox">
+        </div>
+        </div>
+      </div>
+    </div>
+<script src="~/js/renderUi.js"></script>
+<script src="~/js/app.js"></script>

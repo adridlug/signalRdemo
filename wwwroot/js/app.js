@@ -6,7 +6,7 @@ console.log("registering user...")
 var senderUser = registerUserIfNeeded();
 //TODO: register chat user to server
 
-setupAndConnectSignalR();
+var connection = setupAndConnectSignalR();
 
 function registerUserIfNeeded() {
     var usr = sessionStorage.getItem("user");
@@ -19,4 +19,11 @@ function registerUserIfNeeded() {
     } 
     document.getElementById("pUser").textContent = "User name: "+ usr
     return usr;
+}
+
+function ping(receiverUser)
+{
+    connection.invoke("Ping", senderUser, receiverUser).catch(function(error) {
+        return console.error(error);
+    });
 }

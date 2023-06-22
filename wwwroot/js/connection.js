@@ -7,7 +7,12 @@ function setupAndConnectSignalR()
 
     _connection.on("OnNewUserRegistered", function(user) {
         appendUser(user);
+        ping(user);
     });
+
+    _connection.on("OnPingReceived", function(senderUser) {
+        appendUser(senderUser);
+    })
 
     _connection.start().then(function () {
         console.log("connected");
@@ -18,4 +23,6 @@ function setupAndConnectSignalR()
     }).catch((error) => {
         return console.error(error);
     });
+
+    return _connection;
 }

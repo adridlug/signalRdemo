@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: signalrdemo
+  name: signalrdemo
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: signalrdemo
+  template:
+    metadata:
+      labels:
+        run: signalrdemo
+    spec:
+      containers:
+      - name: signalrdemo-container
+        image: signalrdemo
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5244

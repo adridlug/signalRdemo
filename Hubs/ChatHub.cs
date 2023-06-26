@@ -12,6 +12,7 @@ namespace signalRdemo.Hubs
         public async Task RegisterUser(string senderUser)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, senderUser);
+            Console.WriteLine($"User: {senderUser} registered");
             await Clients.Others.SendAsync("OnNewUserRegistered", senderUser);
         }
 

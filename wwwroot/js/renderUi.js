@@ -85,11 +85,13 @@ function appendChatBox(user)
     inputGroup.appendChild(input);
 }
 
-function appendSentMessage(receiverUser, msg) {
+function appendSentMessage(receiverUser, msg, msgId) {
     document.getElementById(receiverUser+"_input").value = null;
     
     var msgPage = document.getElementById(receiverUser+"_msgPage");
-    var p = document.createElement("p");
+    
+    var p = document.createElement("p", );
+    p.setAttribute("id", msgId)
     p.className = "single-msg"
     p.textContent = msg;
 

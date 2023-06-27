@@ -1,41 +1,45 @@
-var msgInbox = document.getElementById("msgInbox");
-var nav = document.getElementById("nav");
+var msgInbox;
+var nav;
 var currentVisibleChat = null;
+var connection;
+var senderUser;
 
-console.log("registering user...")
-var senderUser = registerUserIfNeeded();
-var connection = setupAndConnectSignalR();
+document.addEventListener("DOMContentLoaded", function () {
+  msgInbox = document.getElementById("msgInbox");
+  nav = document.getElementById("nav");
 
+  console.log("registering user...");
+  senderUser = registerUserIfNeeded();
+  connection = setupAndConnectSignalR();
+});
 
 function registerUserIfNeeded() {
-    var usr = sessionStorage.getItem("user");
-    console.log("User: "+usr);
-    if (!usr)
-    {
-        console.log("calling prompt")
-        usr = prompt("Who are you?");
-        sessionStorage.setItem("user", usr);
-    } 
-    document.getElementById("pUser").textContent = "User name: "+ usr
-    return usr;
+  var usr = sessionStorage.getItem("user");
+  console.log("User: " + usr);
+  console.log("calling prompt");
+  while (!usr) {
+    usr = window.prompt("Who are you?");
+  }
+  sessionStorage.setItem("user", usr);
+
+  document.getElementById("pUser").textContent = "User name: " + usr;
+  return usr;
 }
 
-function sendMessage(receiverUser)
-{
-    var input = document.getElementById(receiverUser+"_input")
-    var msg = input.value;
+function sendMessage(receiverUser) {
+  var input = document.getElementById(receiverUser + "_input");
+  var msg = input.value;
 
-    appendSentMessage(receiverUser, msg);
+  var msgId = crypto.randomUUID();
+  appendSentMessage(receiverUser, msg, msgId);
 
-    connection.invoke("SendMessage", senderUser, receiverUser, msg).catch(function (err) {
-        console.error(err.toString());
-    });
+  connection
+    .invoke("SendMessage", senderUser, receiverUser, msg)
+    .catch((error) => console.error(error.message));
 }
 
-function ping(receiverUser)
-{
-    connection.invoke("Ping", senderUser, receiverUser).catch(function (err) {
-        console.error(err.toString());
-    });
+function ping(receiverUser) {
+  connection
+    .invoke("Ping", senderUser, receiverUser)
+    .catch((error) => console.error(error.message));
 }
-

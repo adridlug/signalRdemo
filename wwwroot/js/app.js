@@ -1,21 +1,25 @@
-var msgInbox = document.getElementById("msgInbox");
-var nav = document.getElementById("nav");
+var msgInbox;
+var nav;
 var currentVisibleChat = null;
+var senderUser;
 
-console.log("registering user...")
-var senderUser = registerUserIfNeeded();
-//TODO: register chat user to server
+document.addEventListener("DOMContentLoaded", function () {
+  msgInbox = document.getElementById("msgInbox");
+  nav = document.getElementById("nav");
 
+  console.log("registering user...");
+  senderUser = registerUserIfNeeded();
+});
 
 function registerUserIfNeeded() {
-    var usr = sessionStorage.getItem("user");
-    console.log("User: "+usr);
-    if (!usr)
-    {
-        console.log("calling prompt")
-        usr = prompt("Who are you?");
-        sessionStorage.setItem("user", usr);
-    } 
-    document.getElementById("pUser").textContent = "User name: "+ usr
-    return usr;
+  var usr = sessionStorage.getItem("user");
+  console.log("User: " + usr);
+  console.log("calling prompt");
+  while (!usr) {
+    usr = window.prompt("Who are you?");
+  }
+  sessionStorage.setItem("user", usr);
+
+  document.getElementById("pUser").textContent = "User name: " + usr;
+  return usr;
 }

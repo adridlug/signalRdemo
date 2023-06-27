@@ -212,6 +212,17 @@ received-chats-img {
         width: 46%;
     }
 
+.single-msg  {
+    position: relative;
+}
+
+.single-msg.received::after  {
+    content:"✔";
+    position: absolute;
+    top: 4px;
+    right: 4px;
+}
+
 /* Styling the avatar */
 .outgoing-chats-img {
     display: inline-block;

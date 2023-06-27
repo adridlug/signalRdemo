@@ -3,8 +3,8 @@ function setupAndConnectSignalR() {
     .withUrl("/chatHub")
     .build();
 
-  _connection.on("OnMessageReceived", function (senderUser, message) {
-    appendReceivedMessage(senderUser, message);
+  _connection.on("OnMessageReceived", function (senderUser, message, msgId) {
+    appendReceivedMessage(senderUser, message, msgId);
   });
 
   _connection.on("OnNewUserRegistered", function (user) {
@@ -21,6 +21,10 @@ function setupAndConnectSignalR() {
       console.log(error);
     }
     console.log("reconnecting");
+  });
+
+  _connection.on("OnConfirmMessageReadReceived", function(senderUser, msgId) {
+    markMessageAsRead(msgId);
   });
 
   _connection.onreconnected(function (connectionId) {

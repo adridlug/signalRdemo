@@ -90,14 +90,14 @@ function appendSentMessage(receiverUser, msg, msgId) {
     
     var msgPage = document.getElementById(receiverUser+"_msgPage");
     
-    var p = document.createElement("p", );
-    p.setAttribute("id", msgId)
-    p.className = "single-msg"
-    p.textContent = msg;
+    var msgElement = document.createElement("p");
+    msgElement.setAttribute("id", msgId)
+    msgElement.className = "single-msg"
+    msgElement.textContent = msg;
 
     if (msgPage.lastChild && msgPage.lastChild.className === "outgoing-chats")
     {
-        msgPage.lastChild.lastChild.lastChild.appendChild(p);
+        msgPage.lastChild.lastChild.lastChild.appendChild(msgElement);
         scroll(msgPage);
         return;
     }
@@ -111,23 +111,28 @@ function appendSentMessage(receiverUser, msg, msgId) {
     var divOutChatsMsg = document.createElement('div');
     divOutChatsMsg.className = "outgoing-chats-msg"
     
-    divOutChatsMsg.appendChild(p);
+    divOutChatsMsg.appendChild(msgElement);
     divOutMsgs.appendChild(divOutChatsMsg)
     divOutChats.appendChild(divOutMsgs);
     msgPage.appendChild(divOutChats);
     scroll(msgPage);
 }
 
-function appendReceivedMessage(senderUser, msg)
+function appendReceivedMessage(senderUser, msg, msgId)
 {
     var msgPage = document.getElementById(senderUser+"_msgPage");
-    var p = document.createElement("p");
-    p.className = "single-msg"
-    p.textContent = msg;
+    var msgElement = document.createElement("p");
+    msgElement.setAttribute("id", msgId);
+    msgElement.className = "single-msg"
+    msgElement.textContent = msg;
+
+    msgElement.addEventListener("click", function(event) {
+        sendConfirmMessgeRead(senderUser, msgId);
+    })
 
     if (msgPage.lastChild && msgPage.lastChild.className === "received-chats")
     {
-        msgPage.lastChild.lastChild.lastChild.appendChild(p);
+        msgPage.lastChild.lastChild.lastChild.appendChild(msgElement);
         scroll(msgPage);
         return;
     }
@@ -141,7 +146,7 @@ function appendReceivedMessage(senderUser, msg)
     var divReceivedMsgInbox = document.createElement('div');
     divReceivedMsgInbox.className = "received-msg-inbox"
     
-    divReceivedMsgInbox.appendChild(p);
+    divReceivedMsgInbox.appendChild(msgElement);
     divReceivedMsgs.appendChild(divReceivedMsgInbox);
     divReceivedChats.appendChild(divReceivedMsgs);
     msgPage.appendChild(divReceivedChats);
@@ -157,4 +162,13 @@ function createElement(element, className)
 
 function scroll(msgPage) {
     msgPage.scrollTop = msgPage.scrollHeight;
+}
+
+function markMessageAsRead(msgId)
+{
+    var msg = document.getElementById(msgId);
+    if (msg)
+    {
+        msg.classList.add("single-msg.received");
+    }
 }

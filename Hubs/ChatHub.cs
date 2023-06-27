@@ -16,14 +16,19 @@ namespace signalRdemo.Hubs
             await Clients.Others.SendAsync("OnNewUserRegistered", senderUser);
         }
 
-        public async Task SendMessage(string senderUser, string receiverUser, string message)
+        public async Task SendMessage(string senderUser, string receiverUser, string message, string msgId)
         {
-            await Clients.Group(receiverUser).SendAsync("OnMessageReceived", senderUser, message);
+            await Clients.Group(receiverUser).SendAsync("OnMessageReceived", senderUser, message, msgId);
         }
 
         public async Task Ping(string senderUser, string receiverUser)
         {
             await Clients.Group(receiverUser).SendAsync("OnPingReceived", senderUser);
+        }
+
+        public async Task ConfirmMessageRead(string senderUser, string receiverUser, string msgId)
+        {
+             await Clients.Group(receiverUser).SendAsync("OnConfirmMessageReadReceived", senderUser, msgId);
         }
     }
 }

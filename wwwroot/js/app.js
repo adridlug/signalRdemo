@@ -34,12 +34,19 @@ function sendMessage(receiverUser) {
   appendSentMessage(receiverUser, msg, msgId);
 
   connection
-    .invoke("SendMessage", senderUser, receiverUser, msg)
+    .invoke("SendMessage", senderUser, receiverUser, msg, msgId)
     .catch((error) => console.error(error.message));
 }
 
 function ping(receiverUser) {
   connection
     .invoke("Ping", senderUser, receiverUser)
+    .catch((error) => console.error(error.message));
+}
+
+function sendConfirmMessgeRead(receiverUser, msgId)
+{
+    connection
+    .invoke("ConfirmMessageRead", senderUser, receiverUser, msgId)
     .catch((error) => console.error(error.message));
 }

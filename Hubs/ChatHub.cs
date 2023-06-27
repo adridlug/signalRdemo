@@ -18,6 +18,8 @@ namespace signalRdemo.Hubs
 
         public async Task SendMessage(string senderUser, string receiverUser, string message, string msgId)
         {
+            await Clients.OthersInGroup(senderUser).SendAsync("OnSyncSendMessageReceived", receiverUser, message, msgId);
+
             await Clients.Group(receiverUser).SendAsync("OnMessageReceived", senderUser, message, msgId);
         }
 

@@ -8,6 +8,10 @@ function setupAndConnectSignalR() {
   });
 
   _connection.on("OnNewUserRegistered", function (user) {
+    if (user == senderUser)
+    {
+      return;
+    }
     appendUser(user);
     ping(user);
   });
@@ -26,6 +30,10 @@ function setupAndConnectSignalR() {
   _connection.on("OnConfirmMessageReadReceived", function(senderUser, msgId) {
     markMessageAsRead(msgId);
   });
+
+  _connection.on("OnSyncSendMessageReceived", function (receiverUser, message, msgId) {
+    appendSentMessage(receiverUser, message, msgId);
+  })
 
   _connection.onreconnected(function (connectionId) {
     console.log("Successfully reconnected");

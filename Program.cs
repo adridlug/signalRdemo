@@ -1,3 +1,4 @@
+using signalRdemo;
 using signalRdemo.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,16 +8,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 
-builder.Services.AddAuthentication(options => {
+builder.Services.AddAuthentication(options =>
+{
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options => {
-    
+}).AddJwtBearer(options =>
+{
+
     options.Authority = "https://demo.duendesoftware.com";
     options.Audience = "api";
 
-    options.Events = new JwtBearerEvents {
-        OnMessageReceived = contex => {
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = contex =>
+        {
             var accesstoken = contex.Request.Query["access_token"];
             var path = contex.HttpContext.Request.Path;
 
@@ -28,6 +33,14 @@ builder.Services.AddAuthentication(options => {
             return Task.CompletedTask;
         }
     };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminRequirement", policy =>
+    {
+        policy.AddRequirements(new AdminRequirement());
+    });
 });
 
 var app = builder.Build();

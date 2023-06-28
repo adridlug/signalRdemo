@@ -6,9 +6,10 @@ namespace signalRdemo.Hubs
     [Authorize]
     public class ChatHub : Hub
     {
-        public async Task Broadcast(string senderUser, string message)
+        [Authorize("AdminRequirement")]
+        public async Task Broadcast(string senderUser, string message, string msgId)
         {
-            await Clients.All.SendAsync("OnMessageReceived", senderUser, message);
+            await Clients.All.SendAsync("OnMessageReceived", senderUser, message, msgId);
         }
 
         public async Task RegisterUser(string senderUser)

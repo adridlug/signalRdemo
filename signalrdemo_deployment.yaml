@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+     app.kubernetes.io/name: signalrdemo
+  name: signalrdemo
+  namespace: signalrdemo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: signalrdemo
+  template:
+    metadata:
+      labels:
+        run: signalrdemo
+    spec:
+      containers:
+      - name: signalrdemo-container
+        image: signalrdemo
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5244

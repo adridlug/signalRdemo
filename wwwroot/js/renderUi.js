@@ -11,29 +11,14 @@ function appendNavItem(user)
         return;
     }
     
-    var navItem = createElement("li", "", user+"_li")
-    
+    var navItem = document.createElement("li");
+    navItem.setAttribute("id", user+"_li");
     navItem.addEventListener("click", (event) => {
         showUserChatBox(user);
         });
 
     navItem.appendChild(document.createTextNode(user));
     nav.appendChild(navItem);
-}
-
-function createElement(element, className)
-{
-    var el = document.createElement(element);
-    el.className = className;
-    return el;
-}
-
-function createElement(element, className, id)
-{
-    var el = document.createElement(element);
-    el.className = className;
-    el.setAttribute("id", id);
-    return el;
 }
 
 function showUserChatBox(user)
@@ -55,7 +40,10 @@ function appendChatBox(user)
     {
         return;
     }
-    var chat = createElement("div", "chats", user+"_chat");
+    
+    var chat = document.createElement("div");
+    chat.className = "chats";
+    chat.setAttribute("id", user+"_chat")
     
     if (currentVisibleChat === null) //if it is the first chat which is appended
     {
@@ -67,80 +55,120 @@ function appendChatBox(user)
     }
     
     msgInbox.appendChild(chat);
-    var msgPage = createElement("div", "msg-page", user+"_msgPage");
+
+    var msgPage = document.createElement("div");
+    msgPage.setAttribute("id", user+"_msgPage");
+    msgPage.className = "msg-page";
 
     chat.appendChild(msgPage);
 
-    var msgBottom = createElement("div", "msg-bottom");
+    var msgBottom = document.createElement("div");
+    msgBottom.className = "msg-bottom";
 
     chat.appendChild(msgBottom)
 
-    var inputGroup = createElement("div", "input-group");
+    var inputGroup = document.createElement("div");
+    inputGroup.className = "input-group";
 
     msgBottom.appendChild(inputGroup);
-    
-    var input = createElement("input", "form-control", user+"_input");
+
+    var input = document.createElement("input");
+    input.className = "form-control";
+    input.setAttribute("id", user+"_input");
     input.setAttribute("placeholder", "write message...");
     
     input.addEventListener("keyup", (event) => {
         if (event.key === "Enter") {
-            //TODO: send messae to user
+            sendMessage(user);
         }});
 
     inputGroup.appendChild(input);
 }
 
-function appendSentMessage(receiverUser, msg) {
+function appendSentMessage(receiverUser, msg, msgId) {
     document.getElementById(receiverUser+"_input").value = null;
     
     var msgPage = document.getElementById(receiverUser+"_msgPage");
-    var p = document.createElement("p");
-    p.className = "single-msg"
-    p.textContent = msg;
+    
+    var msgElement = document.createElement("p");
+    msgElement.setAttribute("id", msgId)
+    msgElement.className = "single-msg"
+    msgElement.textContent = msg;
 
     if (msgPage.lastChild && msgPage.lastChild.className === "outgoing-chats")
     {
-        msgPage.lastChild.lastChild.lastChild.appendChild(p);
-        scrollDown(msgPage);
+        msgPage.lastChild.lastChild.lastChild.appendChild(msgElement);
+        scroll(msgPage);
         return;
     }
 
-    var divOutChats = createElement("div", "outgoing-chats");
-    var divOutMsgs = createElement("div", "outgoing-msg");
-    var divOutChatsMsg = createElement("div", "outgoing-chats-msg");
+    var divOutChats = document.createElement('div');
+    divOutChats.className = "outgoing-chats";
     
-    divOutChatsMsg.appendChild(p);
+    var divOutMsgs = document.createElement('div');
+    divOutMsgs.className = "outgoing-msg";
+    
+    var divOutChatsMsg = document.createElement('div');
+    divOutChatsMsg.className = "outgoing-chats-msg"
+    
+    divOutChatsMsg.appendChild(msgElement);
     divOutMsgs.appendChild(divOutChatsMsg)
     divOutChats.appendChild(divOutMsgs);
     msgPage.appendChild(divOutChats);
-    scrollDown(msgPage);
+    scroll(msgPage);
 }
 
-function scrollDown(msgPage) {
-    msgPage.scrollTop = msgPage.scrollHeight;
-}
-
-function appendReceivedMessage(senderUser, msg)
+function appendReceivedMessage(senderUser, msg, msgId)
 {
     var msgPage = document.getElementById(senderUser+"_msgPage");
-    var p = document.createElement("p");
-    p.className = "single-msg"
-    p.textContent = msg;
+    var msgElement = document.createElement("p");
+    msgElement.setAttribute("id", msgId);
+    msgElement.className = "single-msg"
+    msgElement.textContent = msg;
+
+    msgElement.addEventListener("click", function(event) {
+        sendConfirmMessgeRead(senderUser, msgId);
+    })
 
     if (msgPage.lastChild && msgPage.lastChild.className === "received-chats")
     {
-        msgPage.lastChild.lastChild.lastChild.appendChild(p);
-        scrollDown(msgPage);
+        msgPage.lastChild.lastChild.lastChild.appendChild(msgElement);
+        scroll(msgPage);
         return;
     }
 
-    var divReceivedChats = createElement("div", "received-chats");
-    var divReceivedMsgs =  createElement("div", "received-msg");
-    var divReceivedMsgInbox = createElement("div", "received-msg-inbox");
+    var divReceivedChats = document.createElement('div');
+    divReceivedChats.className = "received-chats";
     
-    divReceivedMsgInbox.appendChild(p);
+    var divReceivedMsgs = document.createElement('div');
+    divReceivedMsgs.className = "received-msg";
+    
+    var divReceivedMsgInbox = document.createElement('div');
+    divReceivedMsgInbox.className = "received-msg-inbox"
+    
+    divReceivedMsgInbox.appendChild(msgElement);
     divReceivedMsgs.appendChild(divReceivedMsgInbox);
     divReceivedChats.appendChild(divReceivedMsgs);
     msgPage.appendChild(divReceivedChats);
-    scrollDown(msgPage);
+    scroll(msgPage);
+}
+
+function createElement(element, className)
+{
+    var el = document.createElement(element);
+    el.className = className;
+    return el;
+}
+
+function scroll(msgPage) {
+    msgPage.scrollTop = msgPage.scrollHeight;
+}
+
+function markMessageAsRead(msgId)
+{
+    var msg = document.getElementById(msgId);
+    if (msg)
+    {
+        msg.classList.add("received");
+    }
 }

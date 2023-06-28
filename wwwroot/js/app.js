@@ -10,7 +10,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   console.log("registering user...");
   senderUser = registerUserIfNeeded();
-  connection = setupAndConnectSignalR();
+  getToken()
+    .then((response) => response.json())
+    .then((json) => {
+      connection = setupAndConnectSignalR(json.access_token);
+    });
 });
 
 function registerUserIfNeeded() {
@@ -44,9 +48,26 @@ function ping(receiverUser) {
     .catch((error) => console.error(error.message));
 }
 
-function sendConfirmMessgeRead(receiverUser, msgId)
-{
-    connection
+function sendConfirmMessgeRead(receiverUser, msgId) {
+  connection
     .invoke("ConfirmMessageRead", senderUser, receiverUser, msgId)
     .catch((error) => console.error(error.message));
+}
+
+function getToken() {
+  var data = new FormData();
+  data.append("client_id", "client1");
+  data.append("client_secret", "secret");
+  data.append("grant_type", "client_credentials");
+
+  return fetch("https://demo.duendesoftware.com/connect/token", {
+    method: "POST",
+    headers: {
+      "CONTENT-TYPE": "application/x-www-form-urlencoded",
+    },
+    body: "client_id=m2m.short&client_secret=secret&grant_type=client_credentials&scope=api",
+  });
+
+  //.then((response) => response.json())
+  //.then((json) => console.log(json.access_token));
 }

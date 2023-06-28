@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace signalRdemo.Hubs
 {
+    [Authorize]
     public class ChatHub : Hub
     {
         public async Task Broadcast(string senderUser, string message)

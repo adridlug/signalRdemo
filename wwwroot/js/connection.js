@@ -1,6 +1,7 @@
-function setupAndConnectSignalR() {
+function setupAndConnectSignalR(token) {
+  
   var _connection = new signalR.HubConnectionBuilder()
-    .withUrl("/chatHub")
+    .withUrl("/chatHub", {accessTokenFactory: () => token})
     .build();
 
   _connection.on("OnMessageReceived", function (senderUser, message, msgId) {

@@ -169,6 +169,6 @@ function markMessageAsRead(msgId)
     var msg = document.getElementById(msgId);
     if (msg)
     {
-        msg.classList.add("single-msg.received");
+        msg.classList.add("received");
     }
 }

@@ -79,7 +79,8 @@ function appendChatBox(user)
     
     input.addEventListener("keyup", (event) => {
         if (event.key === "Enter") {
-            sendMessage(user);
+            var msgId = crypto.randomUUID();
+            appendSentMessage(receiverUser, msg, msgId);
         }});
 
     inputGroup.appendChild(input);
@@ -125,10 +126,6 @@ function appendReceivedMessage(senderUser, msg, msgId)
     msgElement.setAttribute("id", msgId);
     msgElement.className = "single-msg"
     msgElement.textContent = msg;
-
-    msgElement.addEventListener("click", function(event) {
-        sendConfirmMessgeRead(senderUser, msgId);
-    })
 
     if (msgPage.lastChild && msgPage.lastChild.className === "received-chats")
     {

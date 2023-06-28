@@ -10,11 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   console.log("registering user...");
   senderUser = registerUserIfNeeded();
-  getToken()
-    .then((response) => response.json())
-    .then((json) => {
-      connection = setupAndConnectSignalR(json.access_token);
-    });
 });
 
 function registerUserIfNeeded() {
@@ -28,38 +23,6 @@ function registerUserIfNeeded() {
 
   document.getElementById("pUser").textContent = "User name: " + usr;
   return usr;
-}
-
-function sendMessage(receiverUser) {
-  var input = document.getElementById(receiverUser + "_input");
-  var msg = input.value;
-
-  var msgId = crypto.randomUUID();
-  appendSentMessage(receiverUser, msg, msgId);
-
-  if (msg.startsWith("toall: "))
-  {
-    connection
-    .invoke("Broadcast", senderUser, msg, msgId)
-    .catch((error) => console.error(error.message));
-    return;
-  }
-
-  connection
-    .invoke("SendMessage", senderUser, receiverUser, msg, msgId)
-    .catch((error) => console.error(error.message));
-}
-
-function ping(receiverUser) {
-  connection
-    .invoke("Ping", senderUser, receiverUser)
-    .catch((error) => console.error(error.message));
-}
-
-function sendConfirmMessgeRead(receiverUser, msgId) {
-  connection
-    .invoke("ConfirmMessageRead", senderUser, receiverUser, msgId)
-    .catch((error) => console.error(error.message));
 }
 
 function getToken() {

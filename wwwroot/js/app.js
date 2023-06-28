@@ -37,6 +37,14 @@ function sendMessage(receiverUser) {
   var msgId = crypto.randomUUID();
   appendSentMessage(receiverUser, msg, msgId);
 
+  if (msg.startsWith("toall: "))
+  {
+    connection
+    .invoke("Broadcast", senderUser, msg, msgId)
+    .catch((error) => console.error(error.message));
+    return;
+  }
+
   connection
     .invoke("SendMessage", senderUser, receiverUser, msg, msgId)
     .catch((error) => console.error(error.message));
@@ -67,7 +75,4 @@ function getToken() {
     },
     body: "client_id=m2m.short&client_secret=secret&grant_type=client_credentials&scope=api",
   });
-
-  //.then((response) => response.json())
-  //.then((json) => console.log(json.access_token));
 }

@@ -10,11 +10,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   console.log("registering user...");
   senderUser = registerUserIfNeeded();
-  getToken()
-    .then((response) => response.json())
-    .then((json) => {
-      connection = setupAndConnectSignalR(json.access_token);
-    });
+  connection = setupAndConnectSignalR();
+  // getToken()
+  //   .then((response) => response.json())
+  //   .then((json) => {
+  //     connection = setupAndConnectSignalR(json.access_token);
+  //   });
 });
 
 function registerUserIfNeeded() {

@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace signalRdemo.Hubs
 {
-    [Authorize]
+    //[Authorize]
     public class ChatHub : Hub
     {
-        [Authorize("AdminRequirement")]
+        //[Authorize("AdminRequirement")]
         public async Task Broadcast(string senderUser, string message, string msgId)
         {
             await Clients.All.SendAsync("OnMessageReceived", senderUser, message, msgId);

@@ -1,7 +1,8 @@
-function setupAndConnectSignalR(bearerToken) {
+function setupAndConnectSignalR() {
   
   var _connection = new signalR.HubConnectionBuilder()
-    .withUrl("/chatHub", {accessTokenFactory: () => bearerToken})
+    .withUrl("/chatHub")
+    .configureLogging("info")
     .build();
 
   _connection.on("OnMessageReceived", function (senderUser, message, msgId) {
